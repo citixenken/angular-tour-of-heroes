@@ -16,9 +16,8 @@ export class HeroesComponent implements OnInit {
   heroes: Hero[] = [];
 
   constructor(
-    private heroService: HeroService
-  ) // private messageService: MessageService
-  {
+    private heroService: HeroService // private messageService: MessageService
+  ) {
     // this.getHeroes(); // not best practice!
     // Reserve the constructor for minimal initialization such as wiring constructor parameters to properties. The constructor shouldn't do anything. It certainly shouldn't call a function that makes HTTP requests to a remote server as a real data service would.
   }
@@ -44,5 +43,22 @@ export class HeroesComponent implements OnInit {
 
   getHeroes(): void {
     this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
+  }
+
+  // add hero
+  add(name: string): void {
+    name = name.trim();
+    if (!name) {
+      return;
+    }
+    this.heroService.addHero({ name } as Hero).subscribe((hero) => {
+      this.heroes.push(hero);
+    });
+  }
+
+  // delete hero
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter((h) => h !== hero);
+    this.heroService.deleteHero(hero.id).subscribe();
   }
 }
